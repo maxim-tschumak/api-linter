@@ -19,6 +19,7 @@ import (
 	"github.com/jhump/protoreflect/desc"
 	apb "google.golang.org/genproto/googleapis/api/annotations"
 	lrpb "google.golang.org/genproto/googleapis/longrunning"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // MethodRequestType returns the precise location of the method's input type.
@@ -47,4 +48,10 @@ func MethodOperationInfo(m *desc.MethodDescriptor) *dpb.SourceCodeInfo_Location 
 // `google.api.method_signature` annotation, if any.
 func MethodSignature(m *desc.MethodDescriptor, index int) *dpb.SourceCodeInfo_Location {
 	return pathLocation(m, 4, int(apb.E_MethodSignature.TypeDescriptor().Number()), index) // MethodDescriptor.options == 4
+}
+
+// MethodOption returns the precise location of the method's option with the given name, if any.
+func MethodOption(m *desc.MethodDescriptor, option string) *dpb.SourceCodeInfo_Location {
+	fd := m.GetMethodOptions().ProtoReflect().Descriptor().Fields().ByName(protoreflect.Name(option))
+	return pathLocation(m, 4, int(fd.Number())) // MethodDescriptor.options == 4
 }

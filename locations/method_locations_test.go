@@ -117,3 +117,33 @@ func TestMethodSignature(t *testing.T) {
 		}
 	}
 }
+
+func TestMethodOption(t *testing.T) {
+	f := parse(t, `
+	  import "google/api/client.proto";
+		service Library {
+		  rpc GetBook(GetBookRequest) returns (Book) {
+		    option deadline = 60.0;
+		  }
+		  rpc WriteBook(NewBook) returns (Book) {}
+		}
+		message GetBookRequest{}
+		message Book {}
+		message NewBook {}
+	`)
+
+	for _, test := range []struct {
+		name      string
+		methodIdx int
+		option    string
+		want      []int32
+	}{
+		{"First", 0, "deadline", []int32{5, 20, 43}},
+		{"Second", 1, "deadline", nil},
+	} {
+		loc := MethodOption(f.GetServices()[0].GetMethods()[test.methodIdx], test.option)
+		if diff := cmp.Diff(loc.GetSpan(), test.want); diff != "" {
+			t.Errorf("%s: %s", test.name, diff)
+		}
+	}
+}
