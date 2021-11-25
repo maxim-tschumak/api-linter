@@ -100,6 +100,8 @@ func (configs Configs) IsRuleEnabled(rule string, path string) bool {
 			if matchRule(rule, c.EnabledRules...) {
 				enabled = true
 			}
+		} else {
+			enabled = false
 		}
 	}
 

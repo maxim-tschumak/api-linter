@@ -53,7 +53,7 @@ func TestLinter_run(t *testing.T) {
 					IncludedPaths: []string{"nofile"},
 				},
 			),
-			ruleProblems,
+			[]Problem{},
 		},
 		{
 			"NonMatchingRule",

@@ -46,7 +46,7 @@ func TestRuleConfigs_IsRuleEnabled(t *testing.T) {
 			},
 			"b.proto",
 			"testrule",
-			enabled,
+			disabled,
 		},
 		{
 			"PathMatched_DisabledRulesNotMatch_Enabled",
@@ -153,7 +153,18 @@ func TestRuleConfigs_IsRuleEnabled(t *testing.T) {
 			},
 			"a.proto",
 			"testrule",
-			enabled,
+			disabled,
+		},
+		{
+			"ExcludedPathMatch_ConfigNotMatched_AllPathsExcluded_Disabled",
+			Configs{
+				{
+					ExcludedPaths: []string{"**"},
+				},
+			},
+			"a.proto",
+			"testrule",
+			disabled,
 		},
 		{
 			"TwoConfigs_Override_Enabled",
